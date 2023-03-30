@@ -21,33 +21,37 @@ namespace op {
 using namespace ov::op;
 
 OutputVector translate_transpose(NodeContext& context) {
-    num_inputs_check(context, 3, 3);
-    auto dim0 = context.const_input<int64_t>(1);
-    auto dim1 = context.const_input<int64_t>(2);
-    Output<Node> rank;
-    std::tie(std::ignore, rank) = get_shape_rank(context, context.get_input(0), true);
-    // Use opset::If for dim normalization
-    auto dim0_node = context.get_input(1);
-    auto dim1_node = context.get_input(2);
-    if (dim0 < 0) {
-        dim0_node = std::make_shared<v1::Add>(rank, dim0_node);
-    }
-    if (dim1 < 0) {
-        dim1_node = std::make_shared<v1::Add>(rank, dim1_node);
-    }
-    auto start = v0::Constant::create(element::i32, {}, {0});
-    auto step = v0::Constant::create(element::i32, {}, {1});
-    auto range = std::make_shared<v4::Range>(start, rank, step, element::i32);
+    num_inputs_check(context, 1, 3);
+    Output<Node> input_order = v0::Constant::create(element::i32, Shape{2}, {1,0});
+    // auto dim0 = context.const_input<int64_t>(1);
+    // int64_t dim0 = 0;
+    // std::cout << "dim 0 " << dim0 << std::endl;
+    // auto dim1 = context.const_input<int64_t>(2);
+    // int64_t dim1 = 1;
+    // Output<Node> input_order;
+    // std::tie(std::ignore, rank) = get_shape_rank(context, context.get_input(0), true);
+    // // Use opset::If for dim normalization
+    // auto dim0_node = context.get_input(1);
+    // auto dim1_node = context.get_input(2);
+    // if (dim0 < 0) {
+    //     dim0_node = std::make_shared<v1::Add>(rank, dim0_node);
+    // }
+    // if (dim1 < 0) {
+    //     dim1_node = std::make_shared<v1::Add>(rank, dim1_node);
+    // }
+    // auto start = v0::Constant::create(element::i32, {}, {0});
+    // auto step = v0::Constant::create(element::i32, {}, {1});
+    // auto range = std::make_shared<v4::Range>(start, rank, step, element::i32);
 
-    auto axis_0 = v0::Constant::create(element::i32, Shape{}, {0});
-    auto dim0_node_ = std::make_shared<v0::Unsqueeze>(dim0_node, axis_0);
-    auto dim1_node_ = std::make_shared<v0::Unsqueeze>(dim1_node, axis_0);
-    auto indices = std::make_shared<v0::Concat>(OutputVector{dim0_node_, dim1_node_}, 0);
-    auto updates = std::make_shared<v0::Concat>(OutputVector{dim1_node_, dim0_node_}, 0);
-    auto scatter = std::make_shared<v3::ScatterElementsUpdate>(range, indices, updates, axis_0);
-    context.mark_nodes({start, step, range, axis_0, dim0_node_, dim1_node_, indices, updates, scatter});
+    // auto axis_0 = v0::Constant::create(element::i32, Shape{}, {0});
+    // auto dim0_node_ = std::make_shared<v0::Unsqueeze>(dim0_node, axis_0);
+    // auto dim1_node_ = std::make_shared<v0::Unsqueeze>(dim1_node, axis_0);
+    // auto indices = std::make_shared<v0::Concat>(OutputVector{dim0_node_, dim1_node_}, 0);
+    // auto updates = std::make_shared<v0::Concat>(OutputVector{dim1_node_, dim0_node_}, 0);
+    // auto scatter = std::make_shared<v3::ScatterElementsUpdate>(range, indices, updates, axis_0);
+    // context.mark_nodes({start, step, range, axis_0, dim0_node_, dim1_node_, indices, updates, scatter});
 
-    return {context.mark_node(std::make_shared<v1::Transpose>(context.get_input(0), scatter))};
+    return {context.mark_node(std::make_shared<v1::Transpose>(context.get_input(0), input_order))};
 };
 
 }  // namespace op

@@ -156,6 +156,10 @@ class OperatorSupport(OperatorSupport):
             "torch.ops.aten.add_.Tensor": None,
             "torch.ops.aten.mean.dim": None,
             "torch.ops.aten.view.default": None,
+            "torch.ops.aten.addmm.default": None,
+            "_operator.getitem": None,
+            "torch.ops.aten.t.default": None,
+            "torch.ops.aten.empty.memory_format": None
         }
 
         super().__init__(support_dict)
@@ -168,11 +172,11 @@ class OperatorSupport(OperatorSupport):
         if node.op not in CALLABLE_NODE_OPS:
             return False
 
-        print("target: ", node.target)
         # ops in supported_dict doesn't have overload name
         # use overloadpacket's qualified_name for OpOverload
         if isinstance(node.target, OpOverload):
             target = _get_qualified_name(node.target.overloadpacket)
+            print(f'Qualified Name is {target}')
 
             if target in self._support_dict:
                 return True

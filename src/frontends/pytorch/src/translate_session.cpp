@@ -43,7 +43,7 @@ std::shared_ptr<Model> TranslateSession::convert_pytorch_model(
     std::shared_ptr<TorchDecoder> pytorch_model,
     const TensorMap& external_tensor_map,
     const std::unordered_map<size_t, PlaceDesc>& external_descriptors) {
- 
+
     // FIXME: don't use global variable to count inlined inputs, no we should use global counter because ID should be unique
     // for all new inlined inputs
     static size_t inlined_nodes_counter = 100000000;    // Suppose there are not graph with more than 10M nodes
@@ -114,7 +114,7 @@ std::shared_ptr<Model> TranslateSession::convert_pytorch_model(
                 }
 
                 tensor_map[fw_tensor_id] = inlined_inputs[i];
-            }  
+            }
 
             auto raw_inputs = node->inputs();
             for (size_t i = 0; i < raw_inputs.size(); ++i) {

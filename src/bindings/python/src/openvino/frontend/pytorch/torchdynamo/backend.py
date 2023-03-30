@@ -10,7 +10,7 @@ from openvino.runtime import Core, Type, PartialShape
 from openvino.frontend import FrontEndManager
 from openvino.frontend.pytorch.decoder import TorchScriptPythonDecoder
 from openvino.frontend.pytorch.torchdynamo.partition import Partitioner
-from openvino.frontend.pytorch.torchdynamo.execute import execute 
+from openvino.frontend.pytorch.torchdynamo.execute import execute
 from torch.fx.experimental.proxy_tensor import make_fx
 
 log = logging.getLogger(__name__)
@@ -25,7 +25,7 @@ def ts_openvino(subgraph, example_inputs):
         model = torch.jit.script(subgraph)
         model.eval()
         fr_model = torch.jit.freeze(model)
-        
+
         core = Core()
         fe_manager = FrontEndManager()
         fe = fe_manager.load_by_framework('pytorch')
@@ -70,9 +70,9 @@ def fx_openvino(subgraph, example_inputs):
             model.eval()
         partitioner = Partitioner()
         compiled_model = partitioner.make_partitions(model)
-    
+
         def _call(*args):
-            res = execute(compiled_model, *example_inputs, executor="openvino")
+            res = execute(compiled_model, *args, executor="openvino")
             return res
         return _call
     except Exception as e:

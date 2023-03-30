@@ -17,12 +17,14 @@ namespace op {
 using namespace ov::op;
 
 OutputVector translate_addmm(NodeContext& context) {
-    num_inputs_check(context, 5, 5);
+    num_inputs_check(context, 3, 5);
     auto input = context.get_input(0);
     auto m1 = context.get_input(1);
     auto m2 = context.get_input(2);
-    auto beta = context.get_input(3);
-    auto alpha = context.get_input(4);
+    // auto beta = context.get_input(3);
+    auto alpha = v0::Constant::create(element::i32, Shape{1}, {1});
+    auto beta = v0::Constant::create(element::i32, Shape{1}, {1});
+    // auto alpha = context.get_input(4);
     auto beta_converted = context.mark_node(std::make_shared<v1::ConvertLike>(beta, input));
     auto mm = context.mark_node(std::make_shared<v0::MatMul>(m1, m2));
     auto alpha_converted = context.mark_node(std::make_shared<v1::ConvertLike>(alpha, mm));

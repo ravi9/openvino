@@ -24,7 +24,7 @@ OutputVector translate_getitem(NodeContext& context) {
         if (getitem_idx < 0) {
             getitem_idx += list_elems.size();
         }
-        FRONT_END_OP_CONVERSION_CHECK(getitem_idx < static_cast<int64_t>(list_elems.size()),
+        FRONT_END_OP_CONVERSION_CHECK(getitem_idx <static_cast<int64_t>(list_elems.size()),
                                       "Index: ",
                                       getitem_idx,
                                       " is out of bounds of input list of len: ",
