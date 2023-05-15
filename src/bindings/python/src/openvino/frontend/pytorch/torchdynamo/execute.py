@@ -68,7 +68,7 @@ def openvino_execute(gm: GraphModule, *args, executor_parameters=None, partition
         compiled_cache[partition_id] = compiled
 
     flat_args, _ = tree_flatten(args)
-    ov_inputs = [a.numpy() for a in flat_args]
+    ov_inputs = [a.cpu().detach().numpy() for a in flat_args]
 
     res = compiled(ov_inputs)
 

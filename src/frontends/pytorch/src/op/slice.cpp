@@ -18,10 +18,10 @@ namespace op {
 
 using namespace ov::op;
 
-OutputVector translate_slice(const NodeContext& context, const size_t num_inputs) {
+OutputVector translate_slice(const NodeContext& context) {
     // aten::slice.t(t[] l, int? start=None, int? end=None, int step=1) -> (t[])
     // aten::slice.Tensor(Tensor(a) self, int dim=0, int? start=None, int? end=None, int step=1) -> (Tensor(a))
-    num_inputs_check(context, 2, 3);
+    num_inputs_check(context, 2, 5);
     ov::Output<ov::Node> dim;
     int start_idx;
     int end_idx;
