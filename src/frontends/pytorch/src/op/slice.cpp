@@ -18,30 +18,24 @@ namespace op {
 
 using namespace ov::op;
 
-OutputVector translate_slice_common(const NodeContext& context, const size_t num_inputs) {
+OutputVector translate_slice(const NodeContext& context, const size_t num_inputs) {
     // aten::slice.t(t[] l, int? start=None, int? end=None, int step=1) -> (t[])
     // aten::slice.Tensor(Tensor(a) self, int dim=0, int? start=None, int? end=None, int step=1) -> (Tensor(a))
+    num_inputs_check(context, 2, 3);
     ov::Output<ov::Node> dim;
     int start_idx;
     int end_idx;
     int step_idx;
     auto axis_0 = context.mark_node(v0::Constant::create(element::i32, Shape{}, {0}));
-    if (num_inputs == 5) {
-        dim = context.get_input(1);
-        if (dim.get_partial_shape().rank().is_dynamic() || dim.get_partial_shape().rank().get_length() == 0) {
-            dim = context.mark_node(std::make_shared<v0::Unsqueeze>(dim, axis_0));
-        }
-        start_idx = 2;
-        end_idx = 3;
-        step_idx = 4;
-    } else if (num_inputs == 4) {
-        start_idx = 1;
-        end_idx = 2;
-        step_idx = 3;
-        dim = context.mark_node(v0::Constant::create(element::i32, Shape{1}, {0}));
-    } else {
-        FRONT_END_OP_CONVERSION_CHECK(false, "Slice must have either 4 or 5 inputs.");
+   
+    dim = context.get_input(1);
+    if (dim.get_partial_shape().rank().is_dynamic() || dim.get_partial_shape().rank().get_length() == 0) {
+        dim = context.mark_node(std::make_shared<v0::Unsqueeze>(dim, axis_0));
     }
+    start_idx = 2;
+    end_idx = 3;
+    step_idx = 4;
+
     // TODO: support default start/end with negative step
     ov::Output<ov::Node> start;
     if (!context.input_is_none(start_idx)) {
@@ -72,14 +66,6 @@ OutputVector translate_slice_common(const NodeContext& context, const size_t num
         step = context.mark_node(v0::Constant::create(element::i32, Shape{1}, {1}));
     }
     return {context.mark_node(std::make_shared<v8::Slice>(context.get_input(0), start, end, step, dim))};
-};
-
-OutputVector translate_slice(const NodeContext& context) {
-    return translate_slice_common(context, context.get_input_size());
-};
-
-OutputVector translate_slice_fx(const NodeContext& context) {
-    return translate_slice_common(context, 5);
 };
 
 }  // namespace op

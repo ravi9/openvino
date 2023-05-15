@@ -50,7 +50,7 @@ class Partitioner:
         partitioner = CapabilityBasedPartitioner(
             graph_module, self.supported_ops, allows_single_node_partition=False)
         partitions = partitioner.propose_partitions()
-        self.add_get_attr_inputs(partitions)
+        #self.add_get_attr_inputs(partitions)
         fused_graph_module = partitioner.fuse_partitions(partitions)
 
         return fused_graph_module

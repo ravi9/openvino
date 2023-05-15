@@ -13,16 +13,20 @@ namespace pytorch {
 namespace op {
 
 OutputVector translate_gelu(const NodeContext& context) {
-    num_inputs_check(context, 2, 2);
+    num_inputs_check(context, 1, 2);
     auto x = context.get_input(0);
-    auto approximate = context.const_input<std::string>(1);
-    if (approximate == "none") {
-        return {context.mark_node(std::make_shared<ov::op::v7::Gelu>(x, ov::op::GeluApproximationMode::ERF))};
+    if (!context.input_is_none(1))
+    {
+    	auto approximate = context.const_input<std::string>(1);
+    	if (approximate == "none") {
+        	return {context.mark_node(std::make_shared<ov::op::v7::Gelu>(x, ov::op::GeluApproximationMode::ERF))};
+    	}
+    	if (approximate == "tanh") {
+        	return {context.mark_node(std::make_shared<ov::op::v7::Gelu>(x, ov::op::GeluApproximationMode::TANH))};
+    	}
+    	FRONT_END_OP_CONVERSION_CHECK(false, "Unsupported approximate for Gelu: ", approximate);
     }
-    if (approximate == "tanh") {
-        return {context.mark_node(std::make_shared<ov::op::v7::Gelu>(x, ov::op::GeluApproximationMode::TANH))};
-    }
-    FRONT_END_OP_CONVERSION_CHECK(false, "Unsupported approximate for Gelu: ", approximate);
+    return {context.mark_node(std::make_shared<ov::op::v7::Gelu>(x, ov::op::GeluApproximationMode::ERF))};
 };
 
 }  // namespace op

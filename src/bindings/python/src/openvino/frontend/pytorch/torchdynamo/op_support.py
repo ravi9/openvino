@@ -180,6 +180,21 @@ class OperatorSupport(OperatorSupport):
             "torch.ops.aten.arange.start": None, #comment this for stable diffusion
             "torch.ops.aten.exp.default": None,
             "torch.ops.aten.silu.default": None, #comment this for stable diffusion
+            "torch.ops.aten.gelu.default": None, 
+            "torch.ops.aten.embedding.default": None,
+            "torch.ops.aten.rsub.Scalar": None, 
+            "torch.ops.aten.permute.default": None, 
+            "torch.ops.aten._softmax.default": None,
+            "torch.ops.aten.clone.default": None,
+            "torch.ops.aten.bmm.default": None,
+            "torch.ops.aten.native_layer_norm.default": None,
+            "torch.ops.aten.detach.default": None,
+            "torch.ops.aten._unsafe_view.default": None,
+            "torch.ops.aten.tanh.default": None, 
+            "torch.ops.aten.pow.Tensor_Scalar": None, 
+            "torch.ops.aten.where.self": None,
+            "torch.ops.aten.full.default": None,
+            "torch.ops.aten.split.Tensor": None,
 
         }
 
