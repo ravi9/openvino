@@ -3,12 +3,12 @@
 
 ##  Introduction
 
-This guide covers the steps to add support for operations that are currently unsupported when using the OpenVINO  via [`torch.compile` feature](https://docs.openvino.ai/2023.2/pytorch_2_0_torch_compile.html). By following these steps, you can extend OpenVINO to support additional PyTorch operations via the TorchDynamo integration.
+This guide covers the steps to add support for operations that are currently unsupported when using the OpenVINO  via [`torch.compile` feature](https://docs.openvino.ai/2024/openvino-workflow/torch-compile.html). By following these steps, you can extend OpenVINO to support additional PyTorch operations via the TorchDynamo integration.
 
 ## Prerequisites
 
 -   Knowledge of Python and C++ programming.
--   Familiarity with PyTorch, OpenVINO, [`torch.compile` feature](https://docs.openvino.ai/2023.2/pytorch_2_0_torch_compile.html).
+-   Familiarity with PyTorch, OpenVINO,[`torch.compile` feature](https://docs.openvino.ai/2024/openvino-workflow/torch-compile.html).
 -   [OpenVINO source code](https://github.com/openvinotoolkit/openvino) downloaded locally for modification.
 
 ## Step 1: Identify Unsupported OPs in TorchFX
